@@ -1,0 +1,82 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Project Rules
+
+🧭 Grappler’s Atlas – The “Nomad List” for Jiu-Jitsu
+What it is:
+A community-powered platform that helps Brazilian Jiu-Jitsu practitioners discover, rate, and share information about cities and gyms around the world—just like Nomad List does for digital nomads.
+
+Core Purpose:
+Make it easy for traveling grapplers to find great places to train, connect with the local BJJ scene, and plan their trips around training.
+
+Key Features (Modeled on Nomad List):
+
+🥋 Gym Directory: With filters like gi/no-gi, class times, visitor friendliness, instructor quality.
+
+🌍 City Rankings: Based on cost of living, gym density, safety, visa rules, and vibe.
+
+✈️ Trip Planning Tools: Find the best places to “roll while you roam.”
+
+👥 Community Reviews: Ratings and tips from grapplers who’ve trained there.
+
+📅 Event Calendar: Competitions, open mats, and seminars by location.
+
+👤 User Profiles: Belt rank, where you've trained, “mat miles” logged.
+
+
+## Tech Stack
+
+- Frontend: 
+Frontend:
+
+React 18.3.1 with TypeScript
+Vite as the build tool and dev server
+Tailwind CSS for styling
+React Router v6 for routing
+Lucide React for icons
+
+Backend/Database:
+Supabase for database and authentication
+PostgreSQL as the underlying database
+
+APIs/Integration:
+Google Maps JavaScript API for mapping features
+Supabase Edge Functions for serverless functions
+Development Tools:
+
+TypeScript for type safety
+ESLint for code linting
+PostCSS with Autoprefixer
+Puppeteer for web scraping (used in scripts)
+
+## General Rules
+
+- use kebab case for naming files
+
+### Comment Rules
+
+- I am new to coding, please write lots of comments to help me understand the code.
+## Frontend Rules
+
+### Design Rules
+
+- We want a clean, simple design.
+- Use responsive design to account for all screen sizes.
+- Color Palette:
+  - Primary Background: #FCFCFC (light, gentle blue)
+  - Accent Colors: Gradients from sky-500 to blue-500
+  - Text Colors: zinc-700 for light mode, zinc-300 for dark mode
+  - Dark Mode: zinc-900 background with sky-400/blue-400 accents
+  - Interactive Elements: sky-600 hover states in light mode, sky-400 in dark mode
+  - Borders: sky-100/20 for subtle separation 
+
+### Component Rules
+
+- the command for shadcn components look like this 'npx shadcn@latest add slider' 
+
+#### Client Component Rules
+
+- Export client components as `export const MyComponent`
