@@ -1,12 +1,5 @@
-import { Buffer } from 'buffer';
-import process from 'process';
-
-// Polyfill Buffer and process
-if (typeof window !== 'undefined') {
-  window.Buffer = Buffer;
-  window.process = process;
-  window.global = window;
-}
+// Import polyfills first
+import './polyfills';
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';

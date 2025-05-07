@@ -1,94 +1,72 @@
 import React from 'react';
-import { Facebook, Twitter, Instagram, Mail, Users, Award } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { MapPin, Users, Award } from 'lucide-react';
 
 const Footer = () => {
   return (
     <footer className="bg-blue-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2">
+          {/* Logo and Description */}
+          <div className="col-span-1 md:col-span-2">
+            <Link to="/" className="flex items-center space-x-2 mb-4">
               <div className="relative flex items-center justify-center bg-red-600 text-white p-2 rounded-lg">
                 <Award size={20} className="absolute" />
                 <Users size={20} className="transform translate-x-1 translate-y-1" />
               </div>
               <span className="text-xl font-bold">Grapplers Atlas</span>
-            </div>
-            <p className="text-gray-300">
-              Helping jiu-jitsu practitioners find the perfect cities for training around the world.
+            </Link>
+            <p className="text-gray-300 mb-4">
+              The global community for Brazilian Jiu-Jitsu practitioners. Find the best training spots,
+              connect with fellow grapplers, and explore the world through BJJ.
             </p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300">
-                <Facebook size={20} />
-              </a>
-              <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300">
-                <Twitter size={20} />
-              </a>
-              <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300">
-                <Instagram size={20} />
-              </a>
-              <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300">
-                <Mail size={20} />
-              </a>
-            </div>
           </div>
 
+          {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Explore</h3>
+            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300">Cities</a>
+                <Link to="/" className="text-gray-300 hover:text-white transition-colors">
+                  Home
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300">Gyms</a>
+                <Link to="/cities" className="text-gray-300 hover:text-white transition-colors">
+                  Cities
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300">Compare</a>
+                <Link to="/compare" className="text-gray-300 hover:text-white transition-colors">
+                  Compare
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300">Map</a>
+                <Link to="/map" className="text-gray-300 hover:text-white transition-colors">
+                  Map
+                </Link>
               </li>
             </ul>
           </div>
 
+          {/* Contact */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Resources</h3>
+            <h3 className="text-lg font-semibold mb-4">Contact</h3>
             <ul className="space-y-2">
-              <li>
-                <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300">BJJ Travel Guide</a>
+              <li className="flex items-center text-gray-300">
+                <MapPin size={16} className="mr-2" />
+                <span>Global Community</span>
               </li>
-              <li>
-                <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300">Visa Information</a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300">Community</a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300">Blog</a>
+              <li className="flex items-center text-gray-300">
+                <Users size={16} className="mr-2" />
+                <span>Join Our Community</span>
               </li>
             </ul>
-          </div>
-
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Join Us</h3>
-            <p className="text-gray-300 mb-4">Subscribe to our newsletter for BJJ travel tips and city updates.</p>
-            <form className="space-y-2">
-              <input
-                type="email"
-                placeholder="Your email"
-                className="w-full px-3 py-2 bg-blue-800 text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-              />
-              <button
-                type="submit"
-                className="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md transition-colors duration-300"
-              >
-                Subscribe
-              </button>
-            </form>
           </div>
         </div>
-        
-        <div className="border-t border-blue-800 mt-8 pt-8 text-center text-gray-400">
+
+        {/* Bottom Bar */}
+        <div className="border-t border-blue-800 mt-8 pt-8 text-center text-gray-300">
           <p>&copy; {new Date().getFullYear()} Grapplers Atlas. All rights reserved.</p>
         </div>
       </div>

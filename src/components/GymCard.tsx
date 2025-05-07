@@ -1,100 +1,114 @@
 import { Gym } from '../types';
-import { Card, CardContent, CardMedia, Typography, Box, Chip, Rating } from '@mui/material';
-import { MapPin, Phone, Globe, Award } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { MapPin, Phone, Globe, Clock, DollarSign, Star } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface GymCardProps {
   gym: Gym;
 }
 
-export function GymCard({ gym }: GymCardProps) {
+export const GymCard = ({ gym }: GymCardProps) => {
   return (
-    <Card 
-      sx={{ 
-        maxWidth: 345,
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        transition: 'transform 0.2s',
-        '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: 3
-        }
-      }}
-    >
-      <CardMedia
-        component="img"
-        height="140"
-        image={`https://source.unsplash.com/featured/?jiujitsu,gym&sig=${gym.id}`}
-        alt={gym.name}
-      />
-      <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
-        <Typography gutterBottom variant="h5" component="div">
+    <Card className="w-full max-w-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+      <div className="relative h-48 overflow-hidden rounded-t-lg">
+        <img 
+          src={gym.photos?.[0] || `https://source.unsplash.com/featured/?jiujitsu,gym&sig=${gym.id}`}
+          alt={gym.name}
+          className="object-cover w-full h-full"
+        />
+        <Badge className="absolute top-2 right-2 bg-sky-600">
+          <DollarSign className="w-4 h-4 mr-1" />
+          {gym.monthly_fee ? `$${gym.monthly_fee}/mo` : 'Contact for pricing'}
+        </Badge>
+      </div>
+
+      <CardHeader>
+        <CardTitle className="text-xl font-bold text-zinc-900 dark:text-zinc-50">
           {gym.name}
-        </Typography>
-        
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <MapPin size={16} />
-          <Typography variant="body2" color="text.secondary">
-            {gym.address}
-          </Typography>
-        </Box>
+        </CardTitle>
+        <CardDescription className="flex items-center gap-1 text-zinc-600 dark:text-zinc-400">
+          <MapPin className="w-4 h-4" />
+          {gym.address}
+        </CardDescription>
+      </CardHeader>
 
-        {gym.phone && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <Phone size={16} />
-            <Typography variant="body2" color="text.secondary">
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          {gym.phone && (
+            <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+              <Phone className="w-4 h-4" />
               {gym.phone}
-            </Typography>
-          </Box>
-        )}
-
-        {gym.website && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <Globe size={16} />
-            <Typography 
-              variant="body2" 
-              color="primary"
-              component="a"
+            </div>
+          )}
+          {gym.website && (
+            <a 
               href={gym.website}
               target="_blank"
               rel="noopener noreferrer"
-              sx={{ textDecoration: 'none' }}
+              className="flex items-center gap-2 text-sm text-sky-600 hover:text-sky-700 dark:text-sky-400"
             >
+              <Globe className="w-4 h-4" />
               Visit Website
-            </Typography>
-          </Box>
+            </a>
+          )}
+        </div>
+
+        {/* Training Styles */}
+        {gym.training_styles && (
+          <div className="flex flex-wrap gap-2">
+            {gym.training_styles.gi && (
+              <Badge variant="secondary" className="bg-sky-100 text-sky-700 dark:bg-sky-900 dark:text-sky-300">
+                Gi
+              </Badge>
+            )}
+            {gym.training_styles.noGi && (
+              <Badge variant="secondary" className="bg-sky-100 text-sky-700 dark:bg-sky-900 dark:text-sky-300">
+                No-Gi
+              </Badge>
+            )}
+            {gym.training_styles.mma && (
+              <Badge variant="secondary" className="bg-sky-100 text-sky-700 dark:bg-sky-900 dark:text-sky-300">
+                MMA
+              </Badge>
+            )}
+            {gym.training_styles.selfDefense && (
+              <Badge variant="secondary" className="bg-sky-100 text-sky-700 dark:bg-sky-900 dark:text-sky-300">
+                Self-Defense
+              </Badge>
+            )}
+          </div>
         )}
 
-        {gym.rating && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Rating value={gym.rating} precision={0.5} readOnly size="small" />
-            <Typography variant="body2" color="text.secondary">
-              ({gym.rating})
-            </Typography>
-          </Box>
+        {/* Amenities */}
+        {gym.amenities && gym.amenities.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {gym.amenities.map((amenity) => (
+              <Badge 
+                key={amenity}
+                variant="outline"
+                className="bg-zinc-50 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+              >
+                {amenity}
+              </Badge>
+            ))}
+          </div>
         )}
-
-        <Box sx={{ mt: 'auto', display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-          {gym.beltLevels?.map((belt) => (
-            <Chip
-              key={belt}
-              label={belt}
-              size="small"
-              icon={<Award size={14} />}
-              sx={{ 
-                backgroundColor: belt === 'Black' ? '#000' : 
-                              belt === 'Brown' ? '#8B4513' :
-                              belt === 'Purple' ? '#800080' :
-                              belt === 'Blue' ? '#0000FF' : '#FFFFFF',
-                color: ['White', 'Blue'].includes(belt) ? '#000' : '#fff',
-                '& .MuiChip-icon': {
-                  color: ['White', 'Blue'].includes(belt) ? '#000' : '#fff'
-                }
-              }}
-            />
-          ))}
-        </Box>
       </CardContent>
+
+      <CardFooter className="flex justify-between border-t border-zinc-100 dark:border-zinc-800">
+        <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+          <Clock className="w-4 h-4" />
+          {gym.opening_hours?.monday || 'Contact for hours'}
+        </div>
+        
+        {gym.rating && (
+          <div className="flex items-center gap-1">
+            <Star className="w-4 h-4 text-yellow-400 fill-current" />
+            <span className="text-sm font-medium">{gym.rating}</span>
+          </div>
+        )}
+      </CardFooter>
     </Card>
   );
-} 
+}; 

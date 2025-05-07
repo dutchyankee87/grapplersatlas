@@ -1,323 +1,182 @@
 import React, { useState } from 'react';
-import { Search, MapPin, DollarSign, Users, Star, Map, Filter } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Search, MapPin, Users, Award, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { cities } from '../data/cities';
-import CityList from '../components/cities/CityList';
-import FilterPanel from '../components/filters/FilterPanel';
-import { FilterType } from '../types';
 
 const HomePage = () => {
-  const [filters, setFilters] = useState<FilterType>({});
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5
-      }
-    }
-  };
+  const featuredCities = [
+    {
+      id: 1,
+      name: 'Rio de Janeiro',
+      country: 'Brazil',
+      image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325',
+      rating: 4.8,
+      gymCount: 120,
+    },
+    {
+      id: 2,
+      name: 'San Diego',
+      country: 'USA',
+      image: 'https://images.unsplash.com/photo-1585421514283-4f8e9d7a3c8c',
+      rating: 4.7,
+      gymCount: 85,
+    },
+    {
+      id: 3,
+      name: 'Tokyo',
+      country: 'Japan',
+      image: 'https://images.unsplash.com/photo-1536098561742-ca998e48cbcc',
+      rating: 4.6,
+      gymCount: 95,
+    },
+  ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <motion.section 
-        className="relative bg-blue-900 text-white"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="absolute inset-0 overflow-hidden">
-          <motion.img
-            src="https://images.pexels.com/photos/9302141/pexels-photo-9302141.jpeg"
-            alt="No-Gi Grappling"
+      <section className="relative h-[80vh] bg-blue-900">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b"
+            alt="BJJ Training"
             className="w-full h-full object-cover opacity-20"
-            initial={{ scale: 1.1 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
           />
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
-          <motion.div 
-            className="max-w-3xl"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center"
           >
-            <motion.h1 
-              className="text-4xl md:text-5xl font-bold mb-4"
-              variants={itemVariants}
-            >
-              Find Your Perfect Grappling City
-            </motion.h1>
-            <motion.p 
-              className="text-xl mb-8"
-              variants={itemVariants}
-            >
-              Discover the best locations around the world for Brazilian Jiu-Jitsu training, competition, and community.
-            </motion.p>
-            
-            <motion.div 
-              className="bg-white rounded-lg shadow-xl p-1 flex flex-col sm:flex-row"
-              variants={itemVariants}
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div className="flex-grow p-2">
-                <div className="flex items-center">
-                  <Search size={20} className="text-gray-400 mr-2" />
-                  <input
-                    type="text"
-                    placeholder="Search for cities, countries, or gyms"
-                    className="w-full border-none focus:ring-0 text-gray-800"
-                  />
-                </div>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+              Find Your Perfect BJJ Training Spot
+            </h1>
+            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+              Discover the best Brazilian Jiu-Jitsu academies and training partners around the world.
+            </p>
+            <div className="max-w-xl mx-auto">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search cities..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-4 py-3 pl-12 rounded-lg bg-white/10 text-white placeholder-gray-300 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+                />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-300" />
               </div>
-              <motion.button 
-                className="bg-red-600 hover:bg-red-700 text-white rounded-md px-6 py-3 w-full sm:w-auto transition-colors duration-300"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Search
-              </motion.button>
-            </motion.div>
+            </div>
           </motion.div>
         </div>
-      </motion.section>
+      </section>
 
-      {/* All Cities Section */}
-      <motion.section 
-        className="py-12 bg-gray-50"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.5 }}
-      >
+      {/* Featured Cities Section */}
+      <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            className="text-center mb-12"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <motion.h2 
-              className="text-3xl font-bold text-blue-900 mb-4"
-              variants={itemVariants}
-            >
-              Find Your Next Grappling Destination
-            </motion.h2>
-            <motion.p 
-              className="text-gray-600 max-w-3xl mx-auto"
-              variants={itemVariants}
-            >
-              Whether you're looking to train with world champions in Rio, join the growing scene in Bali, 
-              or find a BJJ-friendly city for remote work, we've got you covered.
-            </motion.p>
-          </motion.div>
-
-          <motion.div 
-            className="mb-16"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <motion.div 
-              className="flex justify-between items-center mb-6"
-              variants={itemVariants}
-            >
-              <h3 className="text-2xl font-bold text-blue-900">Explore Cities</h3>
-              
-              {/* Mobile Toggle for Filters */}
-              <motion.button
-                className="md:hidden flex items-center text-gray-600 hover:text-blue-900"
-                onClick={() => setShowMobileFilters(!showMobileFilters)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Cities</h2>
+            <p className="text-lg text-gray-600">
+              Explore the most popular BJJ destinations around the world
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {featuredCities.map((city) => (
+              <motion.div
+                key={city.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="bg-white rounded-lg shadow-lg overflow-hidden"
               >
-                <Filter size={20} className="mr-2" />
-                Filters
-              </motion.button>
-            </motion.div>
-
-            <div className="flex flex-col md:flex-row gap-6">
-              {/* Filters Sidebar */}
-              <AnimatePresence>
-                <motion.div 
-                  className={`w-full md:w-80 flex-shrink-0 ${showMobileFilters ? 'block' : 'hidden md:block'}`}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <FilterPanel filters={filters} setFilters={setFilters} />
-                </motion.div>
-              </AnimatePresence>
-              
-              {/* City List */}
-              <motion.div 
-                className="flex-grow"
-                variants={itemVariants}
-              >
-                <CityList cities={cities} filters={filters} />
-              </motion.div>
-            </div>
-          </motion.div>
-
-          {/* Features Section */}
-          <motion.div 
-            className="grid md:grid-cols-2 gap-12 items-center"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <motion.div 
-              className="space-y-6"
-              variants={itemVariants}
-            >
-              <h3 className="text-2xl font-bold text-blue-900">Why Grapplers Atlas?</h3>
-              
-              <motion.div 
-                className="flex"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="flex-shrink-0">
-                  <motion.div 
-                    className="flex items-center justify-center h-12 w-12 rounded-md bg-red-600 text-white"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
+                <div className="relative h-48">
+                  <img
+                    src={city.image}
+                    alt={city.name}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <h3 className="text-xl font-bold">{city.name}</h3>
+                    <p className="text-sm">{city.country}</p>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center">
+                      <Star className="text-yellow-400 mr-1" />
+                      <span className="text-gray-700">{city.rating}</span>
+                    </div>
+                    <div className="flex items-center text-gray-600">
+                      <Users className="mr-1" />
+                      <span>{city.gymCount} gyms</span>
+                    </div>
+                  </div>
+                  <Link
+                    to={`/cities/${city.id}`}
+                    className="block w-full text-center bg-blue-900 text-white py-2 rounded-md hover:bg-blue-800 transition-colors"
                   >
-                    <MapPin size={24} />
-                  </motion.div>
-                </div>
-                <div className="ml-4">
-                  <h4 className="text-lg font-medium text-gray-900">BJJ-Focused City Guides</h4>
-                  <p className="mt-2 text-gray-600">
-                    Detailed information about gym density, training styles, and belt-friendly cultures.
-                  </p>
+                    Explore City
+                  </Link>
                 </div>
               </motion.div>
-              
-              <motion.div 
-                className="flex"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="flex-shrink-0">
-                  <motion.div 
-                    className="flex items-center justify-center h-12 w-12 rounded-md bg-red-600 text-white"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    <DollarSign size={24} />
-                  </motion.div>
-                </div>
-                <div className="ml-4">
-                  <h4 className="text-lg font-medium text-gray-900">Cost Insights</h4>
-                  <p className="mt-2 text-gray-600">
-                    Transparent information about training costs, living expenses, and value for money.
-                  </p>
-                </div>
-              </motion.div>
-              
-              <motion.div 
-                className="flex"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="flex-shrink-0">
-                  <motion.div 
-                    className="flex items-center justify-center h-12 w-12 rounded-md bg-red-600 text-white"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    <Users size={24} />
-                  </motion.div>
-                </div>
-                <div className="ml-4">
-                  <h4 className="text-lg font-medium text-gray-900">Community Connection</h4>
-                  <p className="mt-2 text-gray-600">
-                    Find cities with thriving BJJ communities and connect with fellow traveling grapplers.
-                  </p>
-                </div>
-              </motion.div>
-              
-              <motion.div 
-                className="flex"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="flex-shrink-0">
-                  <motion.div 
-                    className="flex items-center justify-center h-12 w-12 rounded-md bg-red-600 text-white"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    <Map size={24} />
-                  </motion.div>
-                </div>
-                <div className="ml-4">
-                  <h4 className="text-lg font-medium text-gray-900">City Comparison</h4>
-                  <p className="mt-2 text-gray-600">
-                    Compare BJJ scenes in different cities to find your perfect training destination.
-                  </p>
-                </div>
-              </motion.div>
-            </motion.div>
-            
-            <div className="relative h-96 rounded-lg overflow-hidden shadow-xl">
-              <img
-                src="https://images.pexels.com/photos/9302141/pexels-photo-9302141.jpeg"
-                alt="No-Gi Training"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </motion.div>
-        </div>
-      </motion.section>
-
-      {/* Call to Action */}
-      <section className="bg-blue-900 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Find Your Perfect Grappling Destination?</h2>
-          <p className="text-xl mb-8 max-w-3xl mx-auto">
-            Join the community of BJJ travelers discovering the best training spots around the world.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <Link 
-              to="/cities" 
-              className="bg-red-600 hover:bg-red-700 text-white rounded-md px-8 py-3 font-medium transition-colors duration-300"
-            >
-              Explore Cities
-            </Link>
-            <Link 
-              to="/map" 
-              className="bg-white text-blue-900 hover:bg-gray-100 rounded-md px-8 py-3 font-medium transition-colors duration-300"
-            >
-              View Map
-            </Link>
+            ))}
           </div>
         </div>
       </section>
-    </motion.div>
+
+      {/* Features Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-center"
+            >
+              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MapPin className="text-blue-900" size={24} />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Find Training Spots</h3>
+              <p className="text-gray-600">
+                Discover BJJ academies and training partners in cities around the world
+              </p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="text-center"
+            >
+              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="text-blue-900" size={24} />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Join the Community</h3>
+              <p className="text-gray-600">
+                Connect with fellow grapplers and share your BJJ journey
+              </p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              className="text-center"
+            >
+              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Award className="text-blue-900" size={24} />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Track Progress</h3>
+              <p className="text-gray-600">
+                Monitor your training and achievements across different academies
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 };
 

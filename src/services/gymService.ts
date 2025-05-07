@@ -1,12 +1,10 @@
-import { db } from '../db';
-import { gyms } from '../db/schema';
-import { eq } from 'drizzle-orm';
+import { Gym, City } from '../types';
 
-const SERP_API_KEY = process.env.SERP_API_KEY!;
+const API_BASE_URL = '/api';
 
 export async function searchGymsByLocation(location: string) {
   const response = await fetch(
-    `https://serpapi.com/search.json?engine=google_maps&q=bjj+gym+${location}&api_key=${SERP_API_KEY}`
+    `https://serpapi.com/search.json?engine=google_maps&q=bjj+gym+${location}&api_key=${process.env.VITE_SERP_API_KEY}`
   );
   
   const data = await response.json();
@@ -14,27 +12,67 @@ export async function searchGymsByLocation(location: string) {
 }
 
 export async function saveGym(gymData: any) {
-  const newGym = {
-    name: gymData.title,
-    address: gymData.address,
-    city: gymData.address.split(',')[1]?.trim() || '',
-    state: gymData.address.split(',')[2]?.trim() || '',
-    country: gymData.address.split(',')[3]?.trim() || '',
-    phone: gymData.phone,
-    website: gymData.website,
-    description: gymData.description,
-    latitude: gymData.gps_coordinates?.latitude,
-    longitude: gymData.gps_coordinates?.longitude,
-  };
+  const response = await fetch(`${API_BASE_URL}/gyms`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name: gymData.title,
+      address: gymData.address,
+      coordinates: `${gymData.gps_coordinates?.longitude},${gymData.gps_coordinates?.latitude}`,
+      phone: gymData.phone,
+      website: gymData.website,
+      description: gymData.description,
+    }),
+  });
 
-  return await db.insert(gyms).values(newGym).returning();
+  if (!response.ok) {
+    throw new Error('Failed to save gym');
+  }
+
+  return response.json();
 }
 
-export async function getGymsByCity(city: string) {
-  return await db.select().from(gyms).where(eq(gyms.city, city));
+export async function getGymsByCity(cityId: string): Promise<Gym[]> {
+  const response = await fetch(`${API_BASE_URL}/cities/${cityId}/gyms`);
+  
+  if (!response.ok) {
+    throw new Error('Failed to fetch gyms');
+  }
+
+  return response.json();
 }
 
-export async function getAllCities() {
-  const result = await db.select({ city: gyms.city }).from(gyms).groupBy(gyms.city);
-  return result.map(r => r.city);
+export async function getAllCities(): Promise<City[]> {
+  try {
+    console.log('Fetching cities from:', `${API_BASE_URL}/cities`);
+    const response = await fetch(`${API_BASE_URL}/cities`);
+    
+    if (!response.ok) {
+      console.error('Failed to fetch cities:', {
+        status: response.status,
+        statusText: response.statusText,
+        url: response.url
+      });
+      throw new Error(`Failed to fetch cities: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log('Successfully fetched cities:', data);
+    return data;
+  } catch (error) {
+    console.error('Error in getAllCities:', error);
+    throw error;
+  }
+}
+
+export async function getCityById(cityId: string): Promise<City> {
+  const response = await fetch(`${API_BASE_URL}/cities/${cityId}`);
+  
+  if (!response.ok) {
+    throw new Error('Failed to fetch city');
+  }
+
+  return response.json();
 } 

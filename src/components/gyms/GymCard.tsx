@@ -63,7 +63,7 @@ const GymCard: React.FC<GymCardProps> = ({ gym }) => {
               </div>
               <div className="flex items-center">
                 <span className="text-sm font-medium text-gray-900">{gym.rating}</span>
-                {gym.review_count > 0 && (
+                {gym.review_count && (
                   <span className="text-sm text-gray-500 ml-1">({gym.review_count} reviews)</span>
                 )}
               </div>
@@ -136,7 +136,32 @@ const GymCard: React.FC<GymCardProps> = ({ gym }) => {
                 <Clock size={16} className="text-blue-900 mr-2" />
                 <span className="text-sm text-gray-700">Hours</span>
               </div>
-              <span className="text-sm text-gray-900">View Schedule</span>
+              <div className="text-sm text-gray-900">
+                <div className="flex flex-col">
+                  {Object.entries(gym.opening_hours as Record<string, string>).map(([day, hours]) => (
+                    <div key={day} className="flex justify-between gap-2">
+                      <span className="capitalize">{day}:</span>
+                      <span>{hours}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {gym.amenities && gym.amenities.length > 0 && (
+            <div className="flex justify-between items-center">
+              <div className="flex items-center">
+                <Users size={16} className="text-blue-900 mr-2" />
+                <span className="text-sm text-gray-700">Amenities</span>
+              </div>
+              <div className="flex flex-wrap gap-1 justify-end">
+                {(gym.amenities as string[]).map((amenity) => (
+                  <span key={amenity} className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-700">
+                    {amenity}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
         </div>

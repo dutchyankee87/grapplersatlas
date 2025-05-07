@@ -6,27 +6,28 @@ import dotenv from 'dotenv';
 // Load environment variables
 dotenv.config();
 
-// Get Supabase connection string from environment
+// Database configuration
 const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
-  if (import.meta.env.DEV) {
-    console.warn('DATABASE_URL is not defined in development. Some features may not work.');
-  } else {
-    throw new Error('DATABASE_URL is not defined');
-  }
+  throw new Error('DATABASE_URL is not defined');
 }
 
-// Create postgres client with Supabase-specific configuration
-const client = postgres(connectionString || '', {
-  ssl: import.meta.env.PROD ? 'require' : false,
-  max: 1, // Use a single connection for migrations
-  idle_timeout: 20, // Close idle connections after 20 seconds
-  connect_timeout: 10, // Connection timeout of 10 seconds
+// Create the PostgreSQL client
+const client = postgres(connectionString, {
+  ssl: 'require',
+  max: 1,
+  idle_timeout: 20,
+  connect_timeout: 10,
+  prepare: false,
+  connection: {
+    application_name: 'grapplers-atlas',
+    statement_timeout: 10000,
+  },
 });
 
-// Create drizzle instance
+// Create the Drizzle instance
 export const db = drizzle(client, { schema });
 
-// Export client for migrations
+// Export the client for migrations
 export const migrationClient = client; 

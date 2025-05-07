@@ -1,15 +1,34 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { cities } from '../data/cities';
 import { Link, useNavigate } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
 import { Loader } from '@googlemaps/js-api-loader';
+import { City } from '../types';
 
 const MapPage = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [selectedRegion, setSelectedRegion] = useState<string>('All Regions');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [cities, setCities] = useState<City[]>([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const response = await fetch('/api/cities');
+        if (!response.ok) {
+          throw new Error(`Failed to fetch cities: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        setCities(data);
+      } catch (err) {
+        console.error('Error fetching cities:', err);
+        setError(err instanceof Error ? err.message : 'Failed to fetch cities');
+      }
+    };
+
+    fetchCities();
+  }, []);
 
   useEffect(() => {
     // Ensure the map container exists
@@ -76,64 +95,70 @@ const MapPage = () => {
         // Calculate bounds after map is initialized
         const bounds = new google.maps.LatLngBounds();
         cities.forEach(city => {
-          bounds.extend({ lat: city.coordinates.lat, lng: city.coordinates.lng });
+          if (city.coordinates) {
+            const [lng, lat] = city.coordinates.replace(/[()]/g, '').split(',').map(Number);
+            bounds.extend({ lat, lng });
+          }
         });
 
         // Add markers
         cities.forEach(city => {
-          const marker = new google.maps.Marker({
-            position: { lat: city.coordinates.lat, lng: city.coordinates.lng },
-            map,
-            title: city.name,
-            icon: {
-              path: google.maps.SymbolPath.CIRCLE,
-              scale: 8 + (city.gymDensity),
-              fillColor: '#DC2626',
-              fillOpacity: 0.7,
-              strokeWeight: 1,
-              strokeColor: '#ffffff'
-            }
-          });
+          if (city.coordinates) {
+            const [lng, lat] = city.coordinates.replace(/[()]/g, '').split(',').map(Number);
+            const marker = new google.maps.Marker({
+              position: { lat, lng },
+              map,
+              title: city.name,
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 8 + (city.gym_count / 20), // Scale based on gym count
+                fillColor: '#DC2626',
+                fillOpacity: 0.7,
+                strokeWeight: 1,
+                strokeColor: '#ffffff'
+              }
+            });
 
-          const contentString = `
-            <div class="p-4 min-w-[200px]">
-              <div class="font-semibold text-lg text-blue-900">${city.name}</div>
-              <div class="text-gray-600">${city.country}</div>
-              <div class="mt-2">
-                <div class="text-sm">
-                  <span class="font-medium">BJJ Density:</span> 
-                  <span class="text-red-600">${city.gymDensity}/10</span>
+            const contentString = `
+              <div class="p-4 min-w-[200px]">
+                <div class="font-semibold text-lg text-blue-900">${city.name}</div>
+                <div class="text-gray-600">${city.country}</div>
+                <div class="mt-2">
+                  <div class="text-sm">
+                    <span class="font-medium">Gyms:</span> 
+                    <span class="text-red-600">${city.gym_count}</span>
+                  </div>
+                  <div class="text-sm">
+                    <span class="font-medium">Rating:</span> 
+                    <span>${city.rating || '0'}</span>
+                  </div>
                 </div>
-                <div class="text-sm">
-                  <span class="font-medium">Monthly Cost:</span> 
-                  <span>$${city.monthlyCost}</span>
-                </div>
+                <button 
+                  class="mt-3 bg-blue-900 text-white px-4 py-1 rounded text-sm hover:bg-blue-800 transition-colors w-full"
+                  onclick="window.location.href='/city/${city.id}'"
+                >
+                  View Details
+                </button>
               </div>
-              <button 
-                class="mt-3 bg-blue-900 text-white px-4 py-1 rounded text-sm hover:bg-blue-800 transition-colors w-full"
-                onclick="window.location.href='/city/${city.id}'"
-              >
-                View Details
-              </button>
-            </div>
-          `;
+            `;
 
-          const infoWindow = new google.maps.InfoWindow({
-            content: contentString,
-            maxWidth: 300
-          });
+            const infoWindow = new google.maps.InfoWindow({
+              content: contentString,
+              maxWidth: 300
+            });
 
-          marker.addListener('click', () => {
-            navigate(`/city/${city.id}`);
-          });
+            marker.addListener('click', () => {
+              navigate(`/city/${city.id}`);
+            });
 
-          marker.addListener('mouseover', () => {
-            infoWindow.open(map, marker);
-          });
+            marker.addListener('mouseover', () => {
+              infoWindow.open(map, marker);
+            });
 
-          marker.addListener('mouseout', () => {
-            infoWindow.close();
-          });
+            marker.addListener('mouseout', () => {
+              infoWindow.close();
+            });
+          }
         });
 
         // Fit map to bounds
@@ -147,8 +172,10 @@ const MapPage = () => {
       }
     };
 
-    initMap();
-  }, [navigate]);
+    if (cities.length > 0) {
+      initMap();
+    }
+  }, [navigate, cities]);
 
   const handleRegionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedRegion(event.target.value);
@@ -183,7 +210,7 @@ const MapPage = () => {
           <div className="mt-6 flex justify-between">
             <div className="flex items-center">
               <div className="mr-8">
-                <div className="text-sm font-medium text-gray-700 mb-1">BJJ Density Scale</div>
+                <div className="text-sm font-medium text-gray-700 mb-1">Gym Density Scale</div>
                 <div className="flex items-center">
                   <div className="w-4 h-4 rounded-full bg-red-600 opacity-30 mr-2"></div>
                   <span className="text-xs text-gray-600">Low</span>

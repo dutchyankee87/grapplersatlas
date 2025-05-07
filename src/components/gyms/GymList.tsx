@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import GymCard from './GymCard';
 import { Gym } from '../../types';
-import { getGyms } from '../../api/gyms';
+import { GymFilterType } from './GymFilters';
 
 interface GymListProps {
-  cityId?: string;
+  cityId: string;
+  filters?: GymFilterType;
 }
 
-const GymList: React.FC<GymListProps> = ({ cityId }) => {
-  const [gyms, setGyms] = useState<Gym[]>([]);
+const GymList: React.FC<GymListProps> = ({ cityId, filters }) => {
+  const [gymsList, setGyms] = useState<Gym[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -17,9 +18,14 @@ const GymList: React.FC<GymListProps> = ({ cityId }) => {
     async function loadGyms() {
       try {
         setLoading(true);
-        const data = await getGyms(cityId);
-        setGyms(data);
-        setError(null);
+        const response = await fetch(`/api/cities/${cityId}/gyms`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch gyms');
+        }
+
+        const data = await response.json();
+        setGyms(data as Gym[]);
       } catch (err) {
         setError('Failed to load gyms');
         console.error('Error loading gyms:', err);
@@ -49,11 +55,11 @@ const GymList: React.FC<GymListProps> = ({ cityId }) => {
     );
   }
 
-  if (gyms.length === 0) {
+  if (gymsList.length === 0) {
     return (
       <div className="text-center py-12">
         <h3 className="text-xl font-semibold text-gray-700">No gyms found</h3>
-        <p className="text-gray-500 mt-2">Try adjusting your search criteria to see more results.</p>
+        <p className="text-gray-500 mt-2">There are no gyms listed for this city yet.</p>
       </div>
     );
   }
@@ -64,7 +70,7 @@ const GymList: React.FC<GymListProps> = ({ cityId }) => {
       layout
     >
       <AnimatePresence mode="popLayout">
-        {gyms.map((gym) => (
+        {gymsList.map((gym) => (
           <motion.div
             key={gym.id}
             layout

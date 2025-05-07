@@ -1,106 +1,59 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { City } from '../types';
-import { db } from '../db/config';
-import { cities } from '../db/schema';
-import { eq } from 'drizzle-orm';
-import GymList from '../components/gyms/GymList';
-import GymFilters, { GymFilterType } from '../components/gyms/GymFilters';
-import { 
-  MapPin, 
-  DollarSign, 
-  Globe, 
-  Shield, 
-  Sun, 
-  Heart, 
-  Users, 
-  Briefcase, 
-  Wifi, 
-  Award, 
-  Calendar,
-  Clock,
-  Cloud,
-  Laptop
-} from 'lucide-react';
+import { Star, MapPin, DollarSign, Users, Wifi, Building2 } from 'lucide-react';
+import { City, Gym } from '../db/schema';
 
-const CityDetailPage: React.FC = () => {
-  const { cityId } = useParams<{ cityId: string }>();
+const CityDetailPage = () => {
+  const { id } = useParams<{ id: string }>();
   const [city, setCity] = useState<City | null>(null);
+  const [gyms, setGyms] = useState<Gym[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filters, setFilters] = useState<GymFilterType>({
-    trainingStyles: {
-      gi: false,
-      noGi: false,
-      mma: false,
-      selfDefense: false
-    },
-    priceRange: {
-      min: 0,
-      max: 200
-    },
-    openMat: false,
-    rating: 0
-  });
 
   useEffect(() => {
-    async function loadCity() {
-      if (!cityId) return;
-      
+    const fetchCityData = async () => {
       try {
-        setLoading(true);
-        const result = await db.select().from(cities).where(eq(cities.id, cityId));
-        if (result.length > 0) {
-          // Convert string fields to numbers where needed
-          const cityData = {
-            ...result[0],
-            gym_density: result[0].gym_density ? Number(result[0].gym_density) : null,
-            belt_friendliness: result[0].belt_friendliness ? Number(result[0].belt_friendliness) : null,
-            instructor_quality: result[0].instructor_quality ? Number(result[0].instructor_quality) : null,
-            drop_in_friendliness: result[0].drop_in_friendliness ? Number(result[0].drop_in_friendliness) : null,
-            competition_opportunities: result[0].competition_opportunities ? Number(result[0].competition_opportunities) : null,
-            monthly_cost: result[0].monthly_cost ? Number(result[0].monthly_cost) : null,
-            cost_of_living: result[0].cost_of_living ? Number(result[0].cost_of_living) : null,
-            visa_friendliness: result[0].visa_friendliness ? Number(result[0].visa_friendliness) : null,
-            safety: result[0].safety ? Number(result[0].safety) : null,
-            weather_score: result[0].weather_score ? Number(result[0].weather_score) : null,
-            healthcare: result[0].healthcare ? Number(result[0].healthcare) : null,
-            bjj_community: result[0].bjj_community ? Number(result[0].bjj_community) : null,
-            social_life: result[0].social_life ? Number(result[0].social_life) : null,
-            wifi_speed: result[0].wifi_speed ? Number(result[0].wifi_speed) : null,
-            weather_type: result[0].weather_type,
-            remote_work_friendly: result[0].remote_work_friendly ? true : false,
-          };
-          setCity(cityData as City);
-        } else {
-          setError('City not found');
+        // Fetch city details
+        const cityResponse = await fetch(`/api/cities/${id}`);
+        if (!cityResponse.ok) {
+          throw new Error('Failed to fetch city details');
         }
+        const cityData = await cityResponse.json();
+        setCity(cityData);
+
+        // Fetch gyms for the city
+        const gymsResponse = await fetch(`/api/cities/${id}/gyms`);
+        if (!gymsResponse.ok) {
+          throw new Error('Failed to fetch gyms');
+        }
+        const gymsData = await gymsResponse.json();
+        setGyms(gymsData);
       } catch (err) {
-        setError('Failed to load city data');
-        console.error('Error loading city:', err);
+        setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
         setLoading(false);
       }
-    }
+    };
 
-    loadCity();
-  }, [cityId]);
+    fetchCityData();
+  }, [id]);
 
   if (loading) {
     return (
-      <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto"></div>
-        <p className="mt-4 text-gray-600">Loading city data...</p>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
   }
 
   if (error || !city) {
     return (
-      <div className="text-center py-12">
-        <h3 className="text-xl font-semibold text-red-600">Error</h3>
-        <p className="text-gray-600 mt-2">{error || 'City not found'}</p>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-red-500 text-center">
+          <h2 className="text-2xl font-semibold mb-2">Error</h2>
+          <p>{error || 'City not found'}</p>
+        </div>
       </div>
     );
   }
@@ -111,75 +64,99 @@ const CityDetailPage: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="mb-8"
       >
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">{city.name}</h1>
-        <p className="text-gray-600">{city.description}</p>
-      </motion.div>
+        {/* Hero Section */}
+        <div className="relative h-96 rounded-lg overflow-hidden mb-8">
+          <img
+            src={city.image || '/placeholder-city.jpg'}
+            alt={city.name}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-8">
+            <h1 className="text-4xl font-bold text-white mb-2">{city.name}</h1>
+            <p className="text-xl text-white/90">{city.country}</p>
+          </div>
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
-          <GymList cityId={city.id} />
-        </div>
-        <div>
-          <GymFilters onFilterChange={setFilters} />
-          
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-white rounded-lg shadow-md p-6 mt-8"
-          >
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">City Information</h2>
-            <div className="space-y-4">
-              <div className="flex items-center">
-                <MapPin className="text-blue-900 mr-2" size={20} />
-                <span className="text-gray-700">{city.country}</span>
-              </div>
-              <div className="flex items-center">
-                <DollarSign className="text-green-600 mr-2" size={20} />
-                <span className="text-gray-700">Monthly Cost: ${city.monthly_cost}</span>
-              </div>
-              <div className="flex items-center">
-                <Shield className="text-blue-900 mr-2" size={20} />
-                <span className="text-gray-700">Safety Rating: {city.safety}/10</span>
-              </div>
-              <div className="flex items-center">
-                <Cloud className="text-blue-900 mr-2" size={20} />
-                <span className="text-gray-700">
-                  Weather: {city.weather_type} ({city.weather_score}/10)
-                </span>
-              </div>
-              <div className="flex items-center">
-                <Heart className="text-red-500 mr-2" size={20} />
-                <span className="text-gray-700">Healthcare: {city.healthcare}/10</span>
-              </div>
-              <div className="flex items-center">
-                <Users className="text-blue-900 mr-2" size={20} />
-                <span className="text-gray-700">BJJ Community: {city.bjj_community}/10</span>
-              </div>
-              <div className="flex items-center">
-                <Briefcase className="text-blue-900 mr-2" size={20} />
-                <span className="text-gray-700">
-                  Remote Work: {city.remote_work_friendly ? 'Yes' : 'No'}
-                </span>
-              </div>
-              <div className="flex items-center">
-                <Wifi className="text-blue-900 mr-2" size={20} />
-                <span className="text-gray-700">WiFi Speed: {city.wifi_speed} Mbps</span>
-              </div>
-              <div className="flex items-center">
-                <Award className="text-blue-900 mr-2" size={20} />
-                <span className="text-gray-700">Training Quality: {city.instructor_quality}/10</span>
-              </div>
-              <div className="flex items-center">
-                <Calendar className="text-blue-900 mr-2" size={20} />
-                <span className="text-gray-700">Visa Friendliness: {city.visa_friendliness}/10</span>
-              </div>
+        {/* City Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="bg-white rounded-lg p-4 shadow-md">
+            <div className="flex items-center mb-2">
+              <Users className="h-5 w-5 text-blue-500 mr-2" />
+              <span className="font-medium">Gyms</span>
             </div>
-          </motion.div>
+            <p className="text-2xl font-bold">{city.gym_count}</p>
+          </div>
+          <div className="bg-white rounded-lg p-4 shadow-md">
+            <div className="flex items-center mb-2">
+              <DollarSign className="h-5 w-5 text-green-500 mr-2" />
+              <span className="font-medium">Monthly Cost</span>
+            </div>
+            <p className="text-2xl font-bold">${city.monthly_cost || 'N/A'}</p>
+          </div>
+          <div className="bg-white rounded-lg p-4 shadow-md">
+            <div className="flex items-center mb-2">
+              <Wifi className="h-5 w-5 text-purple-500 mr-2" />
+              <span className="font-medium">WiFi Speed</span>
+            </div>
+            <p className="text-2xl font-bold">{city.wifi_speed ? `${city.wifi_speed} Mbps` : 'N/A'}</p>
+          </div>
+          <div className="bg-white rounded-lg p-4 shadow-md">
+            <div className="flex items-center mb-2">
+              <Building2 className="h-5 w-5 text-orange-500 mr-2" />
+              <span className="font-medium">Coworking</span>
+            </div>
+            <p className="text-2xl font-bold">{city.coworking_spaces ? 'Yes' : 'No'}</p>
+          </div>
         </div>
-      </div>
+
+        {/* Description */}
+        <div className="bg-white rounded-lg p-6 shadow-md mb-8">
+          <h2 className="text-2xl font-bold mb-4">About {city.name}</h2>
+          <p className="text-gray-600">{city.description || 'No description available'}</p>
+        </div>
+
+        {/* Gyms Section */}
+        <div className="bg-white rounded-lg p-6 shadow-md">
+          <h2 className="text-2xl font-bold mb-6">BJJ Gyms in {city.name}</h2>
+          {gyms.length === 0 ? (
+            <p className="text-gray-500">No gyms found in this city.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {gyms.map((gym) => (
+                <motion.div
+                  key={gym.id}
+                  className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                  whileHover={{ y: -5 }}
+                >
+                  <h3 className="text-xl font-semibold mb-2">{gym.name}</h3>
+                  <div className="flex items-center text-gray-600 mb-2">
+                    <MapPin className="h-4 w-4 mr-1" />
+                    <span className="text-sm">{gym.address}</span>
+                  </div>
+                  {gym.rating && (
+                    <div className="flex items-center text-gray-600 mb-2">
+                      <Star className="h-4 w-4 mr-1 text-yellow-400" />
+                      <span className="text-sm">{gym.rating}</span>
+                    </div>
+                  )}
+                  {gym.website && (
+                    <a
+                      href={gym.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:text-blue-600 text-sm"
+                    >
+                      Visit Website
+                    </a>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </div>
+      </motion.div>
     </div>
   );
 };

@@ -28,6 +28,19 @@ export type City = {
   coworking_spaces: boolean | null;
   created_at: Date | null;
   updated_at: Date | null;
+  training_styles?: {
+    gi: boolean;
+    noGi: boolean;
+    mma: boolean;
+    selfDefense: boolean;
+  } | null;
+  class_availability?: {
+    morning: boolean;
+    afternoon: boolean;
+    evening: boolean;
+  } | null;
+  rating?: number | null;
+  gym_count?: number | null;
 };
 
 export interface Gym {

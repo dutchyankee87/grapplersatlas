@@ -5,7 +5,6 @@ import path from 'path';
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   // Load env file based on `mode` in the current directory.
-  // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
   const env = loadEnv(mode, process.cwd(), '');
   
   return {
@@ -26,26 +25,31 @@ export default defineConfig(({ mode }) => {
       },
     },
     define: {
-      'process.env': env,
       global: 'globalThis',
     },
     server: {
-      port: 5173,
+      port: 5177,
       strictPort: true,
       host: true,
       open: true,
       cors: true,
       hmr: {
         host: 'localhost',
-        port: 5173,
       },
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3001',
+          changeOrigin: true,
+          secure: false
+        }
+      }
     },
     build: {
       rollupOptions: {
-        external: ['buffer', 'process'],
         output: {
           manualChunks: {
             vendor: ['react', 'react-dom', 'react-router-dom'],
+            polyfills: ['buffer', 'process'],
           },
         },
       },

@@ -1,16 +1,20 @@
-import dotenv from 'dotenv';
 import { z } from 'zod';
-
-// Load environment variables
-dotenv.config();
 
 // Define environment variable schema
 const envSchema = z.object({
-  DATABASE_URL: z.string().min(1),
-  SERP_API_KEY: z.string().min(1).optional(),
+  DATABASE_URL: z.string().optional(),
+  VITE_GOOGLE_MAPS_API_KEY: z.string().optional(),
+  VITE_SUPABASE_URL: z.string().optional(),
+  VITE_SUPABASE_ANON_KEY: z.string().optional(),
 });
 
-// Parse and validate environment variables
-const env = envSchema.parse(process.env);
+// Parse environment variables
+const env = envSchema.parse(import.meta.env);
 
-export default env; 
+// Export validated environment variables
+export const config = {
+  databaseUrl: env.DATABASE_URL,
+  googleMapsApiKey: env.VITE_GOOGLE_MAPS_API_KEY,
+  supabaseUrl: env.VITE_SUPABASE_URL,
+  supabaseAnonKey: env.VITE_SUPABASE_ANON_KEY,
+} as const; 
