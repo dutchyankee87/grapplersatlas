@@ -4,8 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    // <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://maps.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://maps.googleapis.com https://maps.gstatic.com https://images.pexels.com https://source.unsplash.com https://images.pexels.com ; connect-src 'self' http://localhost:3001 https://maps.googleapis.com" />
-   // <meta http-equiv="Content-Security-Policy" content="img-src 'self' data: https://images.pexels.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' http://localhost:* https://localhost:*; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:* https://localhost:* https://maps.googleapis.com https://*.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://maps.googleapis.com https://maps.gstatic.com https://images.pexels.com https://source.unsplash.com; connect-src 'self' http://localhost:* https://localhost:* https://maps.googleapis.com ws://localhost:* wss://localhost:* http://localhost:* ws://localhost:* wss://localhost:*" />
     <title>Grapplers Atlas</title>
   </head>
   <body>

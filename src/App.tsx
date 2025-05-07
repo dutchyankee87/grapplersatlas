@@ -12,7 +12,7 @@ function App() {
   const [showJoinOverlay, setShowJoinOverlay] = useState(false);
 
   return (
-    <Router>
+    <Router basename="/">
       <Layout onJoinClick={() => setShowJoinOverlay(true)}>
         <Routes>
           <Route path="/" element={<HomePage />} />
