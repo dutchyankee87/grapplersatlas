@@ -3,91 +3,59 @@ export type City = {
   name: string;
   country: string;
   continent: string;
-  image: string;
-  description: string;
-  gymDensity: number; // 1-10 scale
-  beltFriendliness: number; // 1-10 scale
-  instructorQuality: number; // 1-10 scale
-  dropInFriendliness: number; // 1-10 scale
-  trainingStyles: {
-    gi: boolean;
-    noGi: boolean;
-    mma: boolean;
-    selfDefense: boolean;
-  };
-  classAvailability: {
-    morning: boolean;
-    afternoon: boolean;
-    evening: boolean;
-  };
-  competitionOpportunities: number; // 1-10 scale
-  monthlyCost: number; // in USD
-  costOfLiving: number; // 1-10 scale (1 = very cheap, 10 = very expensive)
-  visaFriendliness: number; // 1-10 scale
-  safety: number; // 1-10 scale
-  englishFriendly: boolean;
-  weather: {
-    type: 'tropical' | 'temperate' | 'mediterranean' | 'desert' | 'cold';
-    score: number; // 1-10 scale
-  };
-  healthcare: number; // 1-10 scale
-  bjjCommunity: number; // 1-10 scale
-  socialLife: number; // 1-10 scale
-  recoveryFacilities: boolean;
-  remoteWorkFriendly: boolean;
-  wifiSpeed: number; // Mbps
-  coworkingSpaces: boolean;
-  coordinates: {
-    lat: number;
-    lng: number;
-  };
-  featured?: boolean;
-  gymCount: number;
-  trainingQuality: number; // 1-10 scale
-  population: number;
-  rating: number; // 1-5 scale
+  description: string | null;
+  image: string | null;
+  coordinates: string | null;
+  featured: boolean | null;
+  gym_density: number | null;
+  belt_friendliness: number | null;
+  instructor_quality: number | null;
+  drop_in_friendliness: number | null;
+  competition_opportunities: number | null;
+  monthly_cost: number | null;
+  cost_of_living: number | null;
+  visa_friendliness: number | null;
+  safety: number | null;
+  english_friendly: boolean | null;
+  weather_type: string | null;
+  weather_score: number | null;
+  healthcare: number | null;
+  bjj_community: number | null;
+  social_life: number | null;
+  recovery_facilities: boolean | null;
+  remote_work_friendly: boolean | null;
+  wifi_speed: number | null;
+  coworking_spaces: boolean | null;
+  created_at: Date | null;
+  updated_at: Date | null;
 };
 
 export interface Gym {
   id: string;
+  city_id: string | null;
   name: string;
+  description: string | null;
+  website: string | null;
+  phone: string | null;
+  email: string | null;
   address: string;
-  coordinates: {
-    lat: number;
-    lng: number;
-  };
-  rating?: number;
-  website?: string;
-  type: 'bjj' | 'mma';
-  monthlyFee?: number;
-  dropInFee?: number;
-  image?: string;
-  description?: string;
-  classSchedule?: {
-    [key: string]: string[]; // e.g., { "Monday": ["9:00 AM - 10:30 AM", "6:00 PM - 7:30 PM"] }
-  };
-  amenities?: string[];
-  instructor?: string;
-  beltLevels?: string[];
-  phone?: string;
-  reviews?: Array<{
-    author: string;
-    rating: number;
-    text: string;
-    date: string;
-  }>;
-  trainingStyles?: {
+  coordinates: string | null;
+  rating: number | null;
+  review_count: number;
+  photos: string[] | null;
+  opening_hours: any | null;
+  amenities: string[] | null;
+  training_styles: {
     gi: boolean;
     noGi: boolean;
     mma: boolean;
     selfDefense: boolean;
-  };
-  openMat?: {
-    available: boolean;
-    schedule: {
-      [key: string]: string; // e.g., { "Saturday": "10:00 AM - 12:00 PM" }
-    };
-  };
+  } | null;
+  drop_in_fee: number | null;
+  monthly_fee: number | null;
+  verified: boolean;
+  created_at: Date | null;
+  updated_at: Date | null;
 }
 
 export type Instructor = {

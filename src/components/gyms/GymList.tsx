@@ -1,28 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import GymCard from './GymCard';
 import { Gym } from '../../types';
+import { getGyms } from '../../api/gyms';
 
 interface GymListProps {
-  gyms: Gym[];
+  cityId?: string;
 }
 
-const randomImages = [
-  'https://images.pexels.com/photos/2261477/pexels-photo-2261477.jpeg',
-  'https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg',
-  'https://images.pexels.com/photos/718786/pexels-photo-718786.jpeg',
-  'https://images.pexels.com/photos/163403/bjj-mat-grappling-163403.jpeg',
-  'https://images.pexels.com/photos/1432037/pexels-photo-1432037.jpeg',
-  'https://images.pexels.com/photos/290416/pexels-photo-290416.jpeg',
-  'https://images.pexels.com/photos/260447/pexels-photo-260447.jpeg',
-  'https://images.pexels.com/photos/1432038/pexels-photo-1432038.jpeg',
-];
+const GymList: React.FC<GymListProps> = ({ cityId }) => {
+  const [gyms, setGyms] = useState<Gym[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-function getRandomImage() {
-  return randomImages[Math.floor(Math.random() * randomImages.length)];
-}
+  useEffect(() => {
+    async function loadGyms() {
+      try {
+        setLoading(true);
+        const data = await getGyms(cityId);
+        setGyms(data);
+        setError(null);
+      } catch (err) {
+        setError('Failed to load gyms');
+        console.error('Error loading gyms:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
 
-const GymList: React.FC<GymListProps> = ({ gyms }) => {
+    loadGyms();
+  }, [cityId]);
+
+  if (loading) {
+    return (
+      <div className="text-center py-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto"></div>
+        <p className="mt-4 text-gray-600">Loading gyms...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <h3 className="text-xl font-semibold text-red-600">Error</h3>
+        <p className="text-gray-600 mt-2">{error}</p>
+      </div>
+    );
+  }
+
   if (gyms.length === 0) {
     return (
       <div className="text-center py-12">
@@ -32,19 +58,13 @@ const GymList: React.FC<GymListProps> = ({ gyms }) => {
     );
   }
 
-  // Assign random images to gyms without images
-  const gymsWithImages = gyms.map(gym => ({
-    ...gym,
-    image: gym.image || getRandomImage()
-  }));
-
   return (
     <motion.div 
       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
       layout
     >
       <AnimatePresence mode="popLayout">
-        {gymsWithImages.map((gym) => (
+        {gyms.map((gym) => (
           <motion.div
             key={gym.id}
             layout

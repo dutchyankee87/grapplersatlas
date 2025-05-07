@@ -1,0 +1,11 @@
+-- Add more cities with BJJ scenes
+INSERT INTO cities (name, country, continent, description, coordinates, featured, gym_density, belt_friendliness, instructor_quality, drop_in_friendliness, competition_opportunities, monthly_cost, cost_of_living, visa_friendliness, safety, english_friendly, weather_type, weather_score, healthcare, bjj_community, social_life, recovery_facilities, remote_work_friendly, wifi_speed, coworking_spaces)
+VALUES
+  ('Rio de Janeiro', 'Brazil', 'South America', 'The birthplace of BJJ with the highest concentration of black belts and legendary academies.', '(-43.1729,-22.9068)', true, 10, 10, 10, 8, 10, 100, 5, 7, 6, false, 'tropical', 8, 7, 10, 9, true, true, 30, true),
+  ('San Diego', 'USA', 'North America', 'A major hub for BJJ in the US with many world-class academies and perfect weather.', '(-117.1611,32.7157)', true, 9, 9, 9, 9, 9, 200, 8, 9, 9, true, 'mediterranean', 10, 9, 9, 8, true, true, 100, true),
+  ('Tokyo', 'Japan', 'Asia', 'Home to some of the most technical BJJ and a strong competition scene.', '(139.6503,35.6762)', true, 8, 8, 9, 7, 8, 150, 9, 6, 10, false, 'temperate', 7, 10, 8, 8, true, true, 200, true),
+  ('Lisbon', 'Portugal', 'Europe', 'Growing BJJ scene with many high-level competitors and great quality of life.', '(-9.1393,38.7223)', true, 7, 8, 8, 9, 8, 120, 6, 9, 9, true, 'mediterranean', 9, 8, 8, 9, true, true, 100, true),
+  ('Abu Dhabi', 'UAE', 'Asia', 'Home to the ADCC and a rapidly growing BJJ scene with world-class facilities.', '(54.3773,24.4539)', true, 7, 8, 9, 8, 9, 180, 9, 8, 10, true, 'desert', 6, 9, 8, 8, true, true, 200, true),
+  ('Los Angeles', 'USA', 'North America', 'Major BJJ hub with many famous academies and regular competitions.', '(-118.2437,34.0522)', true, 9, 9, 9, 8, 9, 200, 7, 9, 8, true, 'mediterranean', 9, 8, 9, 9, true, true, 100, true),
+  ('Amsterdam', 'Netherlands', 'Europe', 'Strong grappling culture with high-level instruction and great facilities.', '(4.9041,52.3676)', true, 7, 8, 8, 9, 7, 150, 8, 8, 9, true, 'temperate', 7, 9, 8, 9, true, true, 100, true),
+  ('Sydney', 'Australia', 'Oceania', 'Thriving BJJ community with many high-level black belts and regular competitions.', '(151.2093,-33.8688)', true, 8, 8, 8, 9, 8, 160, 8, 7, 9, true, 'temperate', 9, 9, 8, 9, true, true, 100, true); 
