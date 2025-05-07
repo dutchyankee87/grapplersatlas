@@ -3,20 +3,34 @@ import process from 'process';
 
 // Polyfill Buffer and process
 if (typeof window !== 'undefined') {
-  (window as any).Buffer = Buffer;
-  (window as any).process = process;
-  (window as any).global = window;
+  window.Buffer = Buffer;
+  window.process = process;
+  window.global = window;
 }
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App.tsx';
+import App from './App';
 import './index.css';
 
-document.title = "Grapplers Atlas - Find Your Perfect BJJ Destination";
+// Error boundary for development
+if (import.meta.env.DEV) {
+  window.addEventListener('error', (event) => {
+    console.error('Global error:', event.error);
+  });
+}
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
+const rootElement = document.getElementById('root');
+if (!rootElement) throw new Error('Failed to find the root element');
+
+const root = createRoot(rootElement);
+
+try {
+  root.render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+} catch (error) {
+  console.error('Error rendering app:', error);
+}
