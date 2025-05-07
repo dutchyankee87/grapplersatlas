@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, MapPin, DollarSign, Users, Star, Map, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cities } from '../data/cities';
 import CityList from '../components/cities/CityList';
 import FilterPanel from '../components/filters/FilterPanel';
@@ -10,25 +11,77 @@ const HomePage = () => {
   const [filters, setFilters] = useState<FilterType>({});
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       {/* Hero Section */}
-      <section className="relative bg-blue-900 text-white">
+      <motion.section 
+        className="relative bg-blue-900 text-white"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
         <div className="absolute inset-0 overflow-hidden">
-          <img
+          <motion.img
             src="https://images.pexels.com/photos/9302141/pexels-photo-9302141.jpeg"
             alt="No-Gi Grappling"
             className="w-full h-full object-cover opacity-20"
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
           />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Find Your Perfect Grappling City</h1>
-            <p className="text-xl mb-8">
+          <motion.div 
+            className="max-w-3xl"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.h1 
+              className="text-4xl md:text-5xl font-bold mb-4"
+              variants={itemVariants}
+            >
+              Find Your Perfect Grappling City
+            </motion.h1>
+            <motion.p 
+              className="text-xl mb-8"
+              variants={itemVariants}
+            >
               Discover the best locations around the world for Brazilian Jiu-Jitsu training, competition, and community.
-            </p>
+            </motion.p>
             
-            <div className="bg-white rounded-lg shadow-xl p-1 flex flex-col sm:flex-row">
+            <motion.div 
+              className="bg-white rounded-lg shadow-xl p-1 flex flex-col sm:flex-row"
+              variants={itemVariants}
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.2 }}
+            >
               <div className="flex-grow p-2">
                 <div className="flex items-center">
                   <Search size={20} className="text-gray-400 mr-2" />
@@ -39,64 +92,121 @@ const HomePage = () => {
                   />
                 </div>
               </div>
-              <button className="bg-red-600 hover:bg-red-700 text-white rounded-md px-6 py-3 w-full sm:w-auto transition-colors duration-300">
+              <motion.button 
+                className="bg-red-600 hover:bg-red-700 text-white rounded-md px-6 py-3 w-full sm:w-auto transition-colors duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 Search
-              </button>
-            </div>
-          </div>
+              </motion.button>
+            </motion.div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* All Cities Section */}
-      <section className="py-12 bg-gray-50">
+      <motion.section 
+        className="py-12 bg-gray-50"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-blue-900 mb-4">
+          <motion.div 
+            className="text-center mb-12"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.h2 
+              className="text-3xl font-bold text-blue-900 mb-4"
+              variants={itemVariants}
+            >
               Find Your Next Grappling Destination
-            </h2>
-            <p className="text-gray-600 max-w-3xl mx-auto">
+            </motion.h2>
+            <motion.p 
+              className="text-gray-600 max-w-3xl mx-auto"
+              variants={itemVariants}
+            >
               Whether you're looking to train with world champions in Rio, join the growing scene in Bali, 
               or find a BJJ-friendly city for remote work, we've got you covered.
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
 
-          <div className="mb-16">
-            <div className="flex justify-between items-center mb-6">
+          <motion.div 
+            className="mb-16"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.div 
+              className="flex justify-between items-center mb-6"
+              variants={itemVariants}
+            >
               <h3 className="text-2xl font-bold text-blue-900">Explore Cities</h3>
               
               {/* Mobile Toggle for Filters */}
-              <button
+              <motion.button
                 className="md:hidden flex items-center text-gray-600 hover:text-blue-900"
                 onClick={() => setShowMobileFilters(!showMobileFilters)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 <Filter size={20} className="mr-2" />
                 Filters
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
 
             <div className="flex flex-col md:flex-row gap-6">
               {/* Filters Sidebar */}
-              <div className={`w-full md:w-80 flex-shrink-0 ${showMobileFilters ? 'block' : 'hidden md:block'}`}>
-                <FilterPanel filters={filters} setFilters={setFilters} />
-              </div>
+              <AnimatePresence>
+                <motion.div 
+                  className={`w-full md:w-80 flex-shrink-0 ${showMobileFilters ? 'block' : 'hidden md:block'}`}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <FilterPanel filters={filters} setFilters={setFilters} />
+                </motion.div>
+              </AnimatePresence>
               
               {/* City List */}
-              <div className="flex-grow">
+              <motion.div 
+                className="flex-grow"
+                variants={itemVariants}
+              >
                 <CityList cities={cities} filters={filters} />
-              </div>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Features Section */}
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
+          <motion.div 
+            className="grid md:grid-cols-2 gap-12 items-center"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.div 
+              className="space-y-6"
+              variants={itemVariants}
+            >
               <h3 className="text-2xl font-bold text-blue-900">Why Grapplers Atlas?</h3>
               
-              <div className="flex">
+              <motion.div 
+                className="flex"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
                 <div className="flex-shrink-0">
-                  <div className="flex items-center justify-center h-12 w-12 rounded-md bg-red-600 text-white">
+                  <motion.div 
+                    className="flex items-center justify-center h-12 w-12 rounded-md bg-red-600 text-white"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
                     <MapPin size={24} />
-                  </div>
+                  </motion.div>
                 </div>
                 <div className="ml-4">
                   <h4 className="text-lg font-medium text-gray-900">BJJ-Focused City Guides</h4>
@@ -104,13 +214,21 @@ const HomePage = () => {
                     Detailed information about gym density, training styles, and belt-friendly cultures.
                   </p>
                 </div>
-              </div>
+              </motion.div>
               
-              <div className="flex">
+              <motion.div 
+                className="flex"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
                 <div className="flex-shrink-0">
-                  <div className="flex items-center justify-center h-12 w-12 rounded-md bg-red-600 text-white">
+                  <motion.div 
+                    className="flex items-center justify-center h-12 w-12 rounded-md bg-red-600 text-white"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
                     <DollarSign size={24} />
-                  </div>
+                  </motion.div>
                 </div>
                 <div className="ml-4">
                   <h4 className="text-lg font-medium text-gray-900">Cost Insights</h4>
@@ -118,13 +236,21 @@ const HomePage = () => {
                     Transparent information about training costs, living expenses, and value for money.
                   </p>
                 </div>
-              </div>
+              </motion.div>
               
-              <div className="flex">
+              <motion.div 
+                className="flex"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
                 <div className="flex-shrink-0">
-                  <div className="flex items-center justify-center h-12 w-12 rounded-md bg-red-600 text-white">
+                  <motion.div 
+                    className="flex items-center justify-center h-12 w-12 rounded-md bg-red-600 text-white"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
                     <Users size={24} />
-                  </div>
+                  </motion.div>
                 </div>
                 <div className="ml-4">
                   <h4 className="text-lg font-medium text-gray-900">Community Connection</h4>
@@ -132,13 +258,21 @@ const HomePage = () => {
                     Find cities with thriving BJJ communities and connect with fellow traveling grapplers.
                   </p>
                 </div>
-              </div>
+              </motion.div>
               
-              <div className="flex">
+              <motion.div 
+                className="flex"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
                 <div className="flex-shrink-0">
-                  <div className="flex items-center justify-center h-12 w-12 rounded-md bg-red-600 text-white">
+                  <motion.div 
+                    className="flex items-center justify-center h-12 w-12 rounded-md bg-red-600 text-white"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
                     <Map size={24} />
-                  </div>
+                  </motion.div>
                 </div>
                 <div className="ml-4">
                   <h4 className="text-lg font-medium text-gray-900">City Comparison</h4>
@@ -146,19 +280,19 @@ const HomePage = () => {
                     Compare BJJ scenes in different cities to find your perfect training destination.
                   </p>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
             
             <div className="relative h-96 rounded-lg overflow-hidden shadow-xl">
               <img
-                src="https://images.pexels.com/photos/9302118/pexels-photo-9302118.jpeg"
+                src="https://images.pexels.com/photos/9302141/pexels-photo-9302141.jpeg"
                 alt="No-Gi Training"
                 className="w-full h-full object-cover"
               />
             </div>
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Call to Action */}
       <section className="bg-blue-900 text-white py-16">
@@ -183,7 +317,7 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-    </div>
+    </motion.div>
   );
 };
 

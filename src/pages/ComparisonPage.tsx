@@ -36,20 +36,19 @@ const ComparisonPage = () => {
     city.country.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Function to render rating dots
+  // Function to render rating as a scale bar and percentage
   const renderRating = (rating: number, maxRating: number = 10) => {
-    const normalizedRating = Math.ceil((rating / maxRating) * 5);
+    const percentage = (rating / maxRating) * 100;
     
     return (
-      <div className="flex">
-        {[...Array(5)].map((_, i) => (
+      <div className="flex items-center gap-2">
+        <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
           <div 
-            key={i} 
-            className={`w-2 h-2 rounded-full mr-1 ${
-              i < normalizedRating ? 'bg-red-600' : 'bg-gray-300'
-            }`}
+            className="h-full bg-red-600 rounded-full"
+            style={{ width: `${percentage}%` }}
           />
-        ))}
+        </div>
+        <span className="text-sm font-medium text-gray-700">{percentage.toFixed(0)}%</span>
       </div>
     );
   };
@@ -157,7 +156,7 @@ const ComparisonPage = () => {
                     </td>
                     {selectedCities.map(city => (
                       <td key={city.id} className="py-3 px-4 border-t border-r border-gray-200 text-center">
-                        <div className="flex justify-center">{renderRating(city.gymDensity)}</div>
+                        {renderRating(city.gymDensity)}
                       </td>
                     ))}
                   </tr>
@@ -168,7 +167,7 @@ const ComparisonPage = () => {
                     </td>
                     {selectedCities.map(city => (
                       <td key={city.id} className="py-3 px-4 border-t border-r border-gray-200 text-center">
-                        <div className="flex justify-center">{renderRating(city.beltFriendliness)}</div>
+                        {renderRating(city.beltFriendliness)}
                       </td>
                     ))}
                   </tr>
@@ -179,7 +178,7 @@ const ComparisonPage = () => {
                     </td>
                     {selectedCities.map(city => (
                       <td key={city.id} className="py-3 px-4 border-t border-r border-gray-200 text-center">
-                        <div className="flex justify-center">{renderRating(city.instructorQuality)}</div>
+                        {renderRating(city.instructorQuality)}
                       </td>
                     ))}
                   </tr>
@@ -190,7 +189,7 @@ const ComparisonPage = () => {
                     </td>
                     {selectedCities.map(city => (
                       <td key={city.id} className="py-3 px-4 border-t border-r border-gray-200 text-center">
-                        <div className="flex justify-center">{renderRating(city.dropInFriendliness)}</div>
+                        {renderRating(city.dropInFriendliness)}
                       </td>
                     ))}
                   </tr>
@@ -201,7 +200,7 @@ const ComparisonPage = () => {
                     </td>
                     {selectedCities.map(city => (
                       <td key={city.id} className="py-3 px-4 border-t border-r border-gray-200 text-center">
-                        <div className="flex justify-center">{renderRating(city.competitionOpportunities)}</div>
+                        {renderRating(city.competitionOpportunities)}
                       </td>
                     ))}
                   </tr>
@@ -267,7 +266,7 @@ const ComparisonPage = () => {
                     </td>
                     {selectedCities.map(city => (
                       <td key={city.id} className="py-3 px-4 border-t border-r border-gray-200 text-center">
-                        <div className="flex justify-center">{renderRating(city.costOfLiving)}</div>
+                        {renderRating(city.costOfLiving)}
                       </td>
                     ))}
                   </tr>
@@ -278,7 +277,7 @@ const ComparisonPage = () => {
                     </td>
                     {selectedCities.map(city => (
                       <td key={city.id} className="py-3 px-4 border-t border-r border-gray-200 text-center">
-                        <div className="flex justify-center">{renderRating(city.visaFriendliness)}</div>
+                        {renderRating(city.visaFriendliness)}
                       </td>
                     ))}
                   </tr>
@@ -289,7 +288,7 @@ const ComparisonPage = () => {
                     </td>
                     {selectedCities.map(city => (
                       <td key={city.id} className="py-3 px-4 border-t border-r border-gray-200 text-center">
-                        <div className="flex justify-center">{renderRating(city.safety)}</div>
+                        {renderRating(city.safety)}
                       </td>
                     ))}
                   </tr>

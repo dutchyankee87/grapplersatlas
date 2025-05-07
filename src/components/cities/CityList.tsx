@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { City, FilterType } from '../../types';
 import CityCard from './CityCard';
 
@@ -67,19 +68,57 @@ const CityList: React.FC<CityListProps> = ({ cities, filters }) => {
 
   if (filteredCities.length === 0) {
     return (
-      <div className="text-center py-12">
+      <motion.div 
+        className="text-center py-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <h3 className="text-xl font-semibold text-gray-700">No cities match your filters</h3>
         <p className="text-gray-500 mt-2">Try adjusting your filter criteria to see more results.</p>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {filteredCities.map(city => (
-        <CityCard key={city.id} city={city} />
+    <motion.div 
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+      variants={{
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: {
+            staggerChildren: 0.1
+          }
+        }
+      }}
+      initial="hidden"
+      animate="visible"
+    >
+      {filteredCities.map((city, index) => (
+        <motion.div
+          key={city.id}
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            visible: {
+              opacity: 1,
+              y: 0,
+              transition: {
+                duration: 0.5,
+                delay: index * 0.1
+              }
+            }
+          }}
+          whileHover={{ 
+            scale: 1.02,
+            transition: { duration: 0.2 }
+          }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <CityCard city={city} />
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 };
 

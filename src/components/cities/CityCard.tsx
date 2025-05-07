@@ -1,112 +1,117 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { MapPin, DollarSign, Users, Star } from 'lucide-react';
 import { City } from '../../types';
-import { MapPin, DollarSign, Briefcase, Trophy, Users } from 'lucide-react';
-
-// Belt rating component that uses belt colors instead of standard stars
-const BeltRating: React.FC<{ rating: number }> = ({ rating }) => {
-  const fullBelts = Math.floor(rating);
-  const emptyBelts = 5 - fullBelts;
-
-  return (
-    <div className="flex">
-      {[...Array(fullBelts)].map((_, i) => (
-        <div key={i} className="w-3 h-3 rounded-full bg-red-600 mr-1"></div>
-      ))}
-      {[...Array(emptyBelts)].map((_, i) => (
-        <div key={i} className="w-3 h-3 rounded-full bg-gray-300 mr-1"></div>
-      ))}
-    </div>
-  );
-};
 
 interface CityCardProps {
   city: City;
 }
 
 const CityCard: React.FC<CityCardProps> = ({ city }) => {
-  // Normalize ratings to a 1-5 scale for belt ratings
-  const gymRating = Math.ceil(city.gymDensity / 2);
-  const instructorRating = Math.ceil(city.instructorQuality / 2);
-  const comunityRating = Math.ceil(city.bjjCommunity / 2);
+  // Function to render rating as a scale bar and percentage
+  const renderRating = (rating: number, maxRating: number = 10) => {
+    const percentage = (rating / maxRating) * 100;
+    
+    return (
+      <div className="flex items-center gap-2">
+        <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-red-600 rounded-full"
+            style={{ width: `${percentage}%` }}
+          />
+        </div>
+        <span className="text-sm font-medium text-gray-700">{percentage.toFixed(0)}%</span>
+      </div>
+    );
+  };
 
   return (
-    <Link to={`/city/${city.id}`} className="group">
-      <div className="rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-white h-full flex flex-col">
-        <div className="relative h-48 overflow-hidden">
-          <img
+    <Link to={`/city/${city.id}`}>
+      <motion.div 
+        className="bg-white rounded-lg shadow-md overflow-hidden"
+        whileHover={{ y: -5 }}
+        transition={{ duration: 0.2 }}
+      >
+        <div className="relative h-48">
+          <motion.img
             src={city.image}
             alt={city.name}
-            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover"
+            whileHover={{ scale: 1.1 }}
+            transition={{ duration: 0.3 }}
           />
-          {city.featured && (
-            <div className="absolute top-4 right-4 bg-red-600 text-white px-2 py-1 text-xs font-bold rounded">
-              Featured
-            </div>
-          )}
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
-            <h3 className="text-white text-xl font-bold">{city.name}</h3>
-            <div className="flex items-center text-white">
-              <MapPin size={14} className="mr-1" />
-              <span className="text-sm">{city.country}</span>
-            </div>
-          </div>
+          <motion.div 
+            className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          />
+          <motion.div 
+            className="absolute bottom-4 left-4 text-white"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            <h3 className="text-xl font-bold">{city.name}</h3>
+            <p className="text-sm opacity-90">{city.country}</p>
+          </motion.div>
         </div>
-        
-        <div className="p-4 flex-grow">
-          <p className="text-gray-600 text-sm mb-4 line-clamp-2">{city.description}</p>
-          
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <Trophy size={16} className="text-blue-900 mr-2" />
-                <span className="text-sm text-gray-700">Gyms</span>
-              </div>
-              <BeltRating rating={gymRating} />
+
+        <div className="p-4">
+          <motion.div 
+            className="flex items-center justify-between mb-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <div className="flex items-center text-gray-600">
+              <MapPin size={16} className="mr-1" />
+              <span className="text-sm">{city.gymCount} Gyms</span>
             </div>
-            
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <Users size={16} className="text-blue-900 mr-2" />
-                <span className="text-sm text-gray-700">Instructors</span>
-              </div>
-              <BeltRating rating={instructorRating} />
+            <div className="flex items-center text-gray-600">
+              <DollarSign size={16} className="mr-1" />
+              <span className="text-sm">${city.monthlyCost}/mo</span>
             </div>
-            
+          </motion.div>
+
+          <motion.div 
+            className="space-y-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
             <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <Users size={16} className="text-blue-900 mr-2" />
-                <span className="text-sm text-gray-700">Community</span>
-              </div>
-              <BeltRating rating={comunityRating} />
+              <span className="text-sm text-gray-600">Training Quality</span>
+              {renderRating(city.trainingQuality)}
             </div>
-            
             <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <DollarSign size={16} className="text-blue-900 mr-2" />
-                <span className="text-sm text-gray-700">Monthly Cost</span>
-              </div>
-              <span className="font-bold text-gray-900">${city.monthlyCost}/mo</span>
+              <span className="text-sm text-gray-600">Community</span>
+              {renderRating(city.bjjCommunity)}
             </div>
-            
             <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <Briefcase size={16} className="text-blue-900 mr-2" />
-                <span className="text-sm text-gray-700">Remote Work</span>
-              </div>
-              <span className={`text-sm font-medium ${city.remoteWorkFriendly ? 'text-green-600' : 'text-red-600'}`}>
-                {city.remoteWorkFriendly ? 'Friendly' : 'Limited'}
-              </span>
+              <span className="text-sm text-gray-600">Cost of Living</span>
+              {renderRating(city.costOfLiving)}
             </div>
-          </div>
+          </motion.div>
+
+          <motion.div 
+            className="mt-4 flex items-center justify-between"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            <div className="flex items-center text-gray-600">
+              <Users size={16} className="mr-1" />
+              <span className="text-sm">{city.population} People</span>
+            </div>
+            <div className="flex items-center text-yellow-500">
+              <Star size={16} className="mr-1" />
+              <span className="text-sm">{city.rating.toFixed(1)}</span>
+            </div>
+          </motion.div>
         </div>
-        
-        <div className="px-4 pb-4">
-          <button className="w-full bg-blue-900 hover:bg-blue-800 text-white rounded-md py-2 transition-colors duration-300">
-            View Details
-          </button>
-        </div>
-      </div>
+      </motion.div>
     </Link>
   );
 };

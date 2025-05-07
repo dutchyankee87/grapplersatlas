@@ -42,6 +42,10 @@ export type City = {
     lng: number;
   };
   featured?: boolean;
+  gymCount: number;
+  trainingQuality: number; // 1-10 scale
+  population: number;
+  rating: number; // 1-5 scale
 };
 
 export interface Gym {
@@ -72,6 +76,18 @@ export interface Gym {
     text: string;
     date: string;
   }>;
+  trainingStyles?: {
+    gi: boolean;
+    noGi: boolean;
+    mma: boolean;
+    selfDefense: boolean;
+  };
+  openMat?: {
+    available: boolean;
+    schedule: {
+      [key: string]: string; // e.g., { "Saturday": "10:00 AM - 12:00 PM" }
+    };
+  };
 }
 
 export type Instructor = {

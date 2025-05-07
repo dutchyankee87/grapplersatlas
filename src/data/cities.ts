@@ -45,6 +45,10 @@ export const cities: City[] = [
       lng: -43.1729,
     },
     featured: true,
+    gymCount: 150,
+    trainingQuality: 10,
+    population: 6748000,
+    rating: 4.8
   },
   {
     id: 'bali',
@@ -90,6 +94,10 @@ export const cities: City[] = [
       lng: 115.1889,
     },
     featured: true,
+    gymCount: 25,
+    trainingQuality: 8,
+    population: 4225000,
+    rating: 4.5
   },
   {
     id: 'lisbon',
@@ -135,6 +143,10 @@ export const cities: City[] = [
       lng: -9.1393,
     },
     featured: true,
+    gymCount: 35,
+    trainingQuality: 9,
+    population: 504718,
+    rating: 4.6
   },
   {
     id: 'los-angeles',
@@ -179,6 +191,10 @@ export const cities: City[] = [
       lat: 34.0522,
       lng: -118.2437,
     },
+    gymCount: 120,
+    trainingQuality: 9,
+    population: 3898747,
+    rating: 4.7
   },
   {
     id: 'bangkok',
@@ -223,6 +239,10 @@ export const cities: City[] = [
       lat: 13.7563,
       lng: 100.5018,
     },
+    gymCount: 30,
+    trainingQuality: 8,
+    population: 8280925,
+    rating: 4.4
   },
   {
     id: 'tokyo',
@@ -267,6 +287,10 @@ export const cities: City[] = [
       lat: 35.6762,
       lng: 139.6503,
     },
+    gymCount: 45,
+    trainingQuality: 9,
+    population: 37400068,
+    rating: 4.3
   },
   {
     id: 'barcelona',
@@ -311,6 +335,10 @@ export const cities: City[] = [
       lat: 41.3851,
       lng: 2.1734,
     },
+    gymCount: 40,
+    trainingQuality: 8,
+    population: 1620343,
+    rating: 4.5
   },
   {
     id: 'san-diego',
@@ -355,5 +383,9 @@ export const cities: City[] = [
       lat: 32.7157,
       lng: -117.1611,
     },
-  },
+    gymCount: 85,
+    trainingQuality: 9,
+    population: 1386932,
+    rating: 4.7
+  }
 ];

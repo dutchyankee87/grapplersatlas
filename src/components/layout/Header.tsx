@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { Menu, X, MapPin, Users, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const Header = () => {
+type HeaderProps = {
+  onJoinClick: () => void;
+};
+
+const Header: React.FC<HeaderProps> = ({ onJoinClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -37,9 +41,9 @@ const Header = () => {
             <Link to="/map" className="text-gray-700 hover:text-blue-900 font-medium">
               Map
             </Link>
-            <button className="flex items-center bg-blue-900 hover:bg-blue-800 text-white px-4 py-2 rounded-md transition-colors duration-300">
+            <button className="flex items-center bg-blue-900 hover:bg-blue-800 text-white px-4 py-2 rounded-md transition-colors duration-300" onClick={onJoinClick}>
               <MapPin size={16} className="mr-2" />
-              Find BJJ Now
+              Join Grapplers Atlas
             </button>
           </nav>
 
@@ -89,10 +93,13 @@ const Header = () => {
             </Link>
             <button 
               className="w-full flex items-center justify-center bg-blue-900 text-white px-3 py-2 rounded-md"
-              onClick={() => setIsMenuOpen(false)}
+              onClick={() => {
+                setIsMenuOpen(false);
+                onJoinClick();
+              }}
             >
               <MapPin size={16} className="mr-2" />
-              Find BJJ Now
+              Join Grapplers Atlas
             </button>
           </div>
         </div>
